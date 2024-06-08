@@ -15,7 +15,7 @@ const TodoApp = () => {
   const [todos, setTodos] = useState([]);
   const [newTodo, setNewTodo] = useState('');
   const [editingId, setEditingId] = useState(null);
-  const [editingTask, setEditingTask] = useState('');
+  const [editingTask, seteditingTask] = useState('');
 
   const addTodo = async () => {
     if (!newTodo) {
@@ -23,7 +23,7 @@ const TodoApp = () => {
       return;
     }
     const now = new Date();
-
+    
     await axios.post("http://localhost:3001/todos", {
         task: newTodo, 
         completed: false, 
@@ -46,28 +46,26 @@ const TodoApp = () => {
     setTodos(newTodos);
   };
 
-  const removeTodo = async(id) => {
-    console.log("id", id);
-    const newTodos = todos.filter((i) => i.id !== id);
+  const removeTodo = (id) => {
+    const newTodos = todos.filter((_, i) => i !== id);
     setTodos(newTodos);
     message.error('Task removed');
   };
   const startEditing = (id) => {
-    const todoToEdit = todos.find(todo => todo.id === id);
     setEditingId(id);
-    setEditingTask(todoToEdit.task);
+    seteditingTask(todos[id].task);
   };
 
   // Save the edited todo item with the current timestamp
   const saveEditing = () => {
     const now = new Date();
-    const newTodos = todos.map(todo =>
-      todo.id === editingId ? { ...todo, task: editingTask, editedAt: now } : todo
-    );
+    const newTodos = [...todos];
+    newTodos[editingId].task = editingTask;
+    newTodos[editingId].editedAt = moment(now).format('YYYY-MM-DD HH:mm:ss');
     setTodos(newTodos);
     setEditingId(null);
-    setEditingTask('');
-    message.success('Todo updated!');
+    seteditingTask('');
+    message.success('Task updated!');
   };
   return (
     <div className="max-w-3xl mx-auto mt-10 p-5 bg-white rounded shadow">
@@ -85,27 +83,27 @@ const TodoApp = () => {
       <List
         bordered
         dataSource={todos}
-        renderItem={(todo) => (
+        renderItem={(todo, id) => (
           <List.Item
             actions={[
-              editingId === todo.id ? (
+              editingId === id ? (
                 <>
                   <Button type="link" onClick={saveEditing}>Save</Button>
                   <Button type="link" onClick={() => setEditingId(null)}>Cancel</Button>
                 </>
               ) : (
                 <>
-                  <Button type="link" onClick={() => startEditing(todo.id)}>Edit</Button>
-                  <Button type="link" onClick={() => removeTodo(todo.id)}>Remove</Button>
+                  <Button type="link" onClick={() => startEditing(id)}>Edit</Button>
+                  <Button type="link" onClick={() => removeTodo(id)}>Remove</Button>
                 </>
               )
             ]}
           >
             <div className="flex flex-col">
-              {editingId === todo.id ? (
+              {editingId === id ? (
                 <Input 
                   value={editingTask}
-                  onChange={(e) => setEditingTask(e.target.value)}
+                  onChange={(e) => seteditingTask(e.target.value)}
                   onPressEnter={saveEditing}
                   className="mr-2"
                 />
