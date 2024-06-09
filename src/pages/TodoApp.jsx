@@ -22,10 +22,15 @@ const TodoApp = () => {
       message.error("Please enter a Task");
       return;
     }
-    const now = new Date();
+    createTask(newTodo);
+  };
+  //create task function 
+  const createTask= async (addNewTask) => {
+    try {
+      const now = new Date();
 
     await axios.post("http://localhost:3001/todos", {
-      task: newTodo,
+      task: addNewTask,
       completed: false,
       createdAt: moment(now).format("YYYY-MM-DD HH:mm:ss"),
       editedAt: null,
@@ -33,7 +38,7 @@ const TodoApp = () => {
     setTodos([
       ...todos,
       {
-        task: newTodo,
+        task: addNewTask,
         completed: false,
         createdAt: moment(now).format("YYYY-MM-DD HH:mm:ss"),
         editedAt: null,
@@ -41,15 +46,17 @@ const TodoApp = () => {
     ]);
     setNewTodo("");
     message.success("Task added!");
-  };
-
+      
+    } catch (error) {
+      console.log("create task got erorr at ", error);
+    }
+  }
   const toggleTodo = async (id) => {
     const now = new Date();
     const newTodos = [...todos];
     const find = newTodos.findIndex(todo => todo.id===id)
     newTodos[find].completed = !newTodos[find].completed;
     const completedTime = newTodos[find].completed ?  moment(now).format("YYYY-MM-DD HH:mm:ss") :  null;
-    console.log(completedTime);
     await axios.put(`http://localhost:3001/todos/${id}`,{
       ...newTodos[find],
       completed: newTodos[find].completed,
@@ -61,6 +68,7 @@ const TodoApp = () => {
       : message.warning("Task not completed yet!");
     setTodos(newTodos);
   };
+  const checkedBox = async (id) => {}
 
   const removeTodo = async (id) => {
     await axios.delete(`http://localhost:3001/todos/${id}`);
@@ -112,7 +120,7 @@ const TodoApp = () => {
         <List
           bordered
           dataSource={todos}
-          renderItem={(todo, id) => (
+          renderItem={(todo) => (
             <List.Item
               actions={[
                 editingId === todo.id ? (
