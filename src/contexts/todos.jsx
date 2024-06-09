@@ -1,99 +1,111 @@
-import { createContext } from "react";
-
-const todosContext = createContext(null);
+import { createContext,useState,useEffect } from "react";
+import {  message } from "antd";
+import moment from "moment";
+import axios from "axios";
+const TodosContext = createContext();
 
 function Provider({ children }) {
   const [todos, setTodos] = useState([]);
-  const [newTodo, setNewTodo] = useState("");
-  const [editingId, setEditingId] = useState(null);
-  const [editingTask, seteditingTask] = useState("");
-  const FetchTodo = async () => {
-    const response = await axios.get("http://127.0.0.1:3001/todos");
-    setTodos(response.data);
-  };
-  useEffect(() => {
-    FetchTodo();
-  }, []);
+  const fetchTodo = async () => {
+      try {
+        const response = await fetch('http://localhost:3001/todos');
+        if (!response.ok) {
+          throw new Error('Failed to fetch todos');
+        }
+        const data = await response.json();
+        setTodos(data);
+      } catch (error) {
+        setError(error.message);
+        console.log("Erorr : ",error.message)
+      } 
+    };
 
-  const addTodo = async () => {
-    if (!newTodo) {
-      message.error("Please enter a Task");
-      return;
-    }
-    const now = new Date();
+  const createTask= async (addNewTask) => {
+    try {
+      const now = new Date();
 
     await axios.post("http://localhost:3001/todos", {
-      task: newTodo,
+      task: addNewTask,
       completed: false,
       createdAt: moment(now).format("YYYY-MM-DD HH:mm:ss"),
       editedAt: null,
+      isDeleted : false,
     });
     setTodos([
       ...todos,
       {
-        task: newTodo,
+        task: addNewTask,
         completed: false,
         createdAt: moment(now).format("YYYY-MM-DD HH:mm:ss"),
         editedAt: null,
+        isDeleted : false,
       },
     ]);
-    setNewTodo("");
     message.success("Task added!");
-  };
+      
+    } catch (error) {
+      console.log("create task got erorr at ", error);
+    }
+  }
+  const checkedBox = async (id) => {
+    try {
+      const now = new Date();
+      const newTodos = [...todos];
+      const find = newTodos.findIndex(todo => todo.id===id)
+      newTodos[find].completed = !newTodos[find].completed;
+      const completedTime = newTodos[find].completed ?  moment(now).format("YYYY-MM-DD HH:mm:ss") :  null;
+      await axios.put(`http://localhost:3001/todos/${id}`,{
+        ...newTodos[find],
+        completed: newTodos[find].completed,
+        completedAt:completedTime,
 
-  const toggleTodo = async (id) => {
-    const now = new Date();
-    const newTodos = [...todos];
-    const find = newTodos.findIndex((todo) => todo.id === id);
-    newTodos[find].completed = !newTodos[find].completed;
-    const completedTime = newTodos[find].completed
-      ? moment(now).format("YYYY-MM-DD HH:mm:ss")
-      : null;
-    await axios.put(`http://localhost:3001/todos/${id}`, {
-      ...newTodos[find],
-      completed: newTodos[find].completed,
-      completedAt: completedTime,
-    });
+    })
     newTodos[find].completed
       ? message.success("Task completed!")
       : message.warning("Task not completed yet!");
     setTodos(newTodos);
+    } catch (error) {
+      console.log("Check box got Erorr : ", error);
+    }
   };
-
   const removeTodo = async (id) => {
-    await axios.delete(`http://localhost:3001/todos/${id}`);
-    const newTodos = todos.filter((todo) => todo.id !== id);
-    setTodos(newTodos);
-    message.error("Task removed");
+    try {
+      await axios.delete(`http://localhost:3001/todos/${id}`);
+      const newTodos = todos.filter((todo) => todo.id !== id);
+      setTodos(newTodos);
+      message.error("Task removed");
+    } catch (error) {
+      console.log("Can't Remove Task Erorr : ", error);
+    }
   };
-  const startEditing = (id) => {
-    setEditingId(id);
-    const find = todos.find((todo) => todo.id === id);
-    seteditingTask(find.task);
-  };
-
-  // Save the edited todo item with the current timestamp
-  const saveEditing = async () => {
-    const now = new Date();
-    const newTodos = [...todos];
-    const findIndex = todos.findIndex((todo) => todo.id === editingId);
-    await axios.put(`http://localhost:3001/todos/${editingId}`, {
+  const updateTask = async (id,newTask)=>{
+    try {
+      const now = new Date();
+      const newTodos = [...todos];
+      const findIndex = todos.findIndex((todo) => todo.id === id);
+      await axios.put(`http://localhost:3001/todos/${id}`,{
       ...newTodos[findIndex],
-      task: editingTask,
-      editedAt: moment(now).format("YYYY-MM-DD HH:mm:ss"),
-    });
-
-    newTodos[findIndex].task = editingTask;
+      task : newTask,
+      editedAt : moment(now).format("YYYY-MM-DD HH:mm:ss"),
+    })
+    newTodos[findIndex].task = newTask;
     newTodos[findIndex].editedAt = moment(now).format("YYYY-MM-DD HH:mm:ss");
     setTodos(newTodos);
-    setEditingId(null);
-    seteditingTask("");
     message.success("Task updated!");
-  };
 
+    } catch (error) {
+      console.log("Update Task got Erorr : ", error);
+    }
+  }
   const valueToShare = {
+    todos,
+    fetchTodo,
+    createTask,
+    updateTask,
+    checkedBox,
+    removeTodo,
   };
-  return <todosContext.Provider>{children}</todosContext.Provider>;
+  return <TodosContext.Provider value={valueToShare}>{children}</TodosContext.Provider>;
 }
-
-export default Provider;
+export {Provider}
+export default TodosContext;

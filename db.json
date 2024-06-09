@@ -1,34 +1,5 @@
 {
   "todos": [
-    {
-      "id": "6814",
-      "task": "Add Navbar aaa",
-      "completed": true,
-      "completedAt": "2024-06-09 15:01:47",
-      "createdAt": "2024-06-09 13:31:26",
-      "editedAt": "2024-06-09 14:12:21"
-    },
-    {
-      "id": "9dd7",
-      "task": "Learn React js",
-      "completed": true,
-      "createdAt": "2024-06-09 13:31:33",
-      "editedAt": null,
-      "completedAt": "2024-06-09 14:07:46"
-    },
-    {
-      "id": "2468",
-      "task": "ssssa",
-      "completed": false,
-      "createdAt": "2024-06-09 15:50:49",
-      "editedAt": null
-    },
-    {
-      "id": "875c",
-      "task": "sas",
-      "completed": false,
-      "createdAt": "2024-06-09 15:57:02",
-      "editedAt": null
-    }
+
   ]
 }

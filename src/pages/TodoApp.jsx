@@ -1,18 +1,13 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect,useContext } from "react";
 import { Input, Button, List, Checkbox, message } from "antd";
-import moment from "moment";
-import axios from "axios";
 
+import useTodosContext from "../hooks/use-todos-context";
 const TodoApp = () => {
-  const FetchTodo = async () => {
-    const response = await axios.get("http://127.0.0.1:3001/todos");
-    setTodos(response.data);
-  };
+  const {fetchTodo,createTask,checkedBox,updateTask,removeTodo , todos} = useTodosContext();
   useEffect(() => {
-    FetchTodo();
+    fetchTodo();
   }, []);
 
-  const [todos, setTodos] = useState([]);
   const [newTodo, setNewTodo] = useState("");
   const [editingId, setEditingId] = useState(null);
   const [editingTask, seteditingTask] = useState("");
@@ -23,59 +18,9 @@ const TodoApp = () => {
       return;
     }
     createTask(newTodo);
-  };
-  //create task function 
-  const createTask= async (addNewTask) => {
-    try {
-      const now = new Date();
-
-    await axios.post("http://localhost:3001/todos", {
-      task: addNewTask,
-      completed: false,
-      createdAt: moment(now).format("YYYY-MM-DD HH:mm:ss"),
-      editedAt: null,
-    });
-    setTodos([
-      ...todos,
-      {
-        task: addNewTask,
-        completed: false,
-        createdAt: moment(now).format("YYYY-MM-DD HH:mm:ss"),
-        editedAt: null,
-      },
-    ]);
     setNewTodo("");
-    message.success("Task added!");
-      
-    } catch (error) {
-      console.log("create task got erorr at ", error);
-    }
-  }
-  const toggleTodo = async (id) => {
-    const now = new Date();
-    const newTodos = [...todos];
-    const find = newTodos.findIndex(todo => todo.id===id)
-    newTodos[find].completed = !newTodos[find].completed;
-    const completedTime = newTodos[find].completed ?  moment(now).format("YYYY-MM-DD HH:mm:ss") :  null;
-    await axios.put(`http://localhost:3001/todos/${id}`,{
-      ...newTodos[find],
-      completed: newTodos[find].completed,
-      completedAt:completedTime,
-
-    })
-    newTodos[find].completed
-      ? message.success("Task completed!")
-      : message.warning("Task not completed yet!");
-    setTodos(newTodos);
   };
-  const checkedBox = async (id) => {}
 
-  const removeTodo = async (id) => {
-    await axios.delete(`http://localhost:3001/todos/${id}`);
-    const newTodos = todos.filter((todo) => todo.id !== id);
-    setTodos(newTodos);
-    message.error("Task removed");
-  };
   const startEditing = (id) => {
     setEditingId(id);
     const find = todos.find((todo) => todo.id === id);
@@ -84,23 +29,11 @@ const TodoApp = () => {
 
   // Save the edited todo item with the current timestamp
   const saveEditing = async () => {
-    const now = new Date();
-    const newTodos = [...todos];
-    const findIndex = todos.findIndex((todo) => todo.id === editingId);
-    await axios.put(`http://localhost:3001/todos/${editingId}`,{
-      ...newTodos[findIndex],
-      task : editingTask,
-      editedAt : moment(now).format("YYYY-MM-DD HH:mm:ss"),
-
-    })
-
-    newTodos[findIndex].task = editingTask;
-    newTodos[findIndex].editedAt = moment(now).format("YYYY-MM-DD HH:mm:ss");
-    setTodos(newTodos);
+    updateTask(editingId,editingTask)
     setEditingId(null);
     seteditingTask("");
-    message.success("Task updated!");
   };
+
   return (
     <div className=" w-full h-screen">
       <div className="max-w-3xl mx-auto mt-10 p-5 bg-white rounded shadow">
@@ -155,7 +88,7 @@ const TodoApp = () => {
                 ) : (
                   <Checkbox
                     checked={todo.completed}
-                    onChange={() => toggleTodo(todo.id)}
+                    onChange={() => checkedBox(todo.id)}
                   >
                     <span className={todo.completed ? "line-through" : ""}>
                       {todo.task}
