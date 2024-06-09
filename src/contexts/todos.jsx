@@ -87,6 +87,19 @@ function Provider({ children }) {
       console.log("Update Task got Erorr : ", error);
     }
   }
+  const recoverTask =async (id)=>{
+    try {
+        const find = todos.find((todo) => todo.id == id);
+        await axios.put(`http://localhost:3001/todos/${id}`,{
+            ...find,
+            isDeleted: false,
+        });
+        await fetchTodo();
+        message.info("Task Recovered");
+    } catch (error) {
+      console.log("Can't Recover Task Erorr : ", error.message);
+    }
+  }
   const valueToShare = {
     todos,
     fetchTodo,
@@ -94,6 +107,7 @@ function Provider({ children }) {
     updateTask,
     checkedBox,
     removeTodo,
+    recoverTask,
   };
   return <TodosContext.Provider value={valueToShare}>{children}</TodosContext.Provider>;
 }

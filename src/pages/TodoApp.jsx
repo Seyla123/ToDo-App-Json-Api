@@ -1,9 +1,9 @@
-import React, { useState, useEffect,useContext } from "react";
+import React, { useState, useEffect } from "react";
 import { Input, Button, List, Checkbox, message } from "antd";
 
 import useTodosContext from "../hooks/use-todos-context";
 const TodoApp = () => {
-  const {fetchTodo,createTask,checkedBox,updateTask,removeTodo , todos} = useTodosContext();
+  const {fetchTodo,createTask,checkedBox,updateTask,removeTodo , todos,recoverTask} = useTodosContext();
   useEffect(() => {
     fetchTodo();
     
@@ -12,6 +12,7 @@ const TodoApp = () => {
   const [editingId, setEditingId] = useState(null);
   const [editingTask, seteditingTask] = useState("");
   const filter = todos.filter(todo => todo.isDeleted == false)
+  const filterDeleted = todos.filter(todo => todo.isDeleted == true)
   const addTodo = async () => {
     if (!newTodo) {
       message.error("Please enter a Task");
@@ -97,6 +98,28 @@ const TodoApp = () => {
                 <div className="text-sm text-gray-500">
                   <div>Created at: {todo.createdAt}</div>
                   {todo.editedAt && <div>Last edited at: {todo.editedAt}</div>}
+                </div>
+              </div>
+            </List.Item>
+          )}
+        />
+                <h2 className="text-xl font-bold mt-10">Deleted Todos</h2>
+        <List
+          bordered
+          dataSource={filterDeleted}
+          renderItem={(todo) => (
+            <List.Item
+              actions={[
+                <Button type="link" onClick={() => recoverTask(todo.id)}>
+                  Recover
+                </Button>,
+              ]}
+            >
+              <div className="flex flex-col">
+                <span>{todo.task}</span>
+                <div className="text-sm text-gray-500">
+                  <div>Created at: {new Date(todo.createdAt).toLocaleString()}</div>
+                  {todo.editedAt && <div>Last edited at: {new Date(todo.editedAt).toLocaleString()}</div>}
                 </div>
               </div>
             </List.Item>

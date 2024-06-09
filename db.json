@@ -3,11 +3,19 @@
     {
       "id": "4b00",
       "task": "learning react js",
-      "completed": true,
+      "completed": false,
       "createdAt": "2024-06-09 19:23:25",
       "editedAt": null,
-      "isDeleted": false,
-      "completedAt": "2024-06-09 19:23:28"
+      "isDeleted": true,
+      "completedAt": null
+    },
+    {
+      "id": "e6f2",
+      "task": "zxzc",
+      "completed": false,
+      "createdAt": "2024-06-09 19:32:15",
+      "editedAt": null,
+      "isDeleted": true
     }
   ]
 }
