@@ -52,8 +52,9 @@ const TodoApp = () => {
     setTodos(newTodos);
   };
 
-  const removeTodo = (id) => {
-    const newTodos = todos.filter((_, i) => i !== id);
+  const removeTodo = async (id) => {
+    await axios.delete(`http://localhost:3001/todos/${id}`);
+    const newTodos = todos.filter((todo) => todo.id !== id);
     setTodos(newTodos);
     message.error("Task removed");
   };
@@ -109,7 +110,7 @@ const TodoApp = () => {
                     <Button type="link" onClick={() => startEditing(id)}>
                       Edit
                     </Button>
-                    <Button type="link" onClick={() => removeTodo(id)}>
+                    <Button type="link" onClick={() => removeTodo(todo.id)}>
                       Remove
                     </Button>
                   </>

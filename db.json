@@ -1,13 +1,6 @@
 {
   "todos": [
     {
-      "task": "ZXCzxc",
-      "completed": false,
-      "createdAt": "2024-06-08 22:08:18",
-      "editedAt": "2024-06-08 22:08:20",
-      "id": "0"
-    },
-    {
       "id": "db10",
       "task": "fs2",
       "completed": false,
