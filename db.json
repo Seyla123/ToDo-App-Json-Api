@@ -17,5 +17,21 @@
       "editedAt": null,
       "isDeleted": true
     }
+  ],
+  "users": [
+    {
+      "id": "c958",
+      "name": "seav seyla",
+      "email": "email@gmail.com",
+      "password": "12345678",
+      "avatar": "https://via.placeholder.com/64"
+    },
+    {
+      "id": "5a51",
+      "name": "ssd",
+      "email": "asdas@gmail.com",
+      "password": "asdas",
+      "avatar": "https://via.placeholder.com/64"
+    }
   ]
 }
