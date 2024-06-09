@@ -6,11 +6,12 @@ const TodoApp = () => {
   const {fetchTodo,createTask,checkedBox,updateTask,removeTodo , todos} = useTodosContext();
   useEffect(() => {
     fetchTodo();
+    
   }, []);
-
   const [newTodo, setNewTodo] = useState("");
   const [editingId, setEditingId] = useState(null);
   const [editingTask, seteditingTask] = useState("");
+
 
   const addTodo = async () => {
     if (!newTodo) {

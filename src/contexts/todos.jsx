@@ -5,6 +5,7 @@ import axios from "axios";
 const TodosContext = createContext();
 
 function Provider({ children }) {
+  const [todoAll,setTodoAll] = useState([]);
   const [todos, setTodos] = useState([]);
   const fetchTodo = async () => {
       try {
@@ -13,9 +14,10 @@ function Provider({ children }) {
           throw new Error('Failed to fetch todos');
         }
         const data = await response.json();
-        setTodos(data);
+        setTodoAll(data);
+        setTodos(data.filter(item=>item.isDeleted==false));
+
       } catch (error) {
-        setError(error.message);
         console.log("Erorr : ",error.message)
       } 
     };
@@ -68,16 +70,30 @@ function Provider({ children }) {
       console.log("Check box got Erorr : ", error);
     }
   };
+//   const removeTodo = async (id) => {
+//     try {
+//       await axios.delete(`http://localhost:3001/todos/${id}`);
+//       const newTodos = todos.filter((todo) => todo.id !== id);
+//       setTodos(newTodos);
+//       message.error("Task removed");
+//     } catch (error) {
+//       console.log("Can't Remove Task Erorr : ", error);
+//     }
+//   };
   const removeTodo = async (id) => {
     try {
-      await axios.delete(`http://localhost:3001/todos/${id}`);
-      const newTodos = todos.filter((todo) => todo.id !== id);
-      setTodos(newTodos);
-      message.error("Task removed");
+        const find = todos.find((todo) => todo.id == id);
+        await axios.put(`http://localhost:3001/todos/${id}`,{
+            ...find,
+            isDeleted: true,
+        });
+        const newTodos = todos.filter((todo) => todo.id !== id);
+        setTodos(newTodos);
+        message.error("Task removed");
     } catch (error) {
-      console.log("Can't Remove Task Erorr : ", error);
+      console.log("Can't Remove Task Erorr : ", error.message);
     }
-  };
+  }
   const updateTask = async (id,newTask)=>{
     try {
       const now = new Date();
@@ -99,6 +115,7 @@ function Provider({ children }) {
   }
   const valueToShare = {
     todos,
+    todoAll,
     fetchTodo,
     createTask,
     updateTask,
