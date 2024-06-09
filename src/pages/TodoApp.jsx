@@ -60,15 +60,24 @@ const TodoApp = () => {
   };
   const startEditing = (id) => {
     setEditingId(id);
-    seteditingTask(todos[id].task);
+    const find = todos.find((todo) => todo.id === id);
+    seteditingTask(find.task);
   };
 
   // Save the edited todo item with the current timestamp
-  const saveEditing = () => {
+  const saveEditing = async () => {
     const now = new Date();
     const newTodos = [...todos];
-    newTodos[editingId].task = editingTask;
-    newTodos[editingId].editedAt = moment(now).format("YYYY-MM-DD HH:mm:ss");
+    const findIndex = todos.findIndex((todo) => todo.id === editingId);
+    await axios.put(`http://localhost:3001/todos/${editingId}`,{
+      ...newTodos[findIndex],
+      task : editingTask,
+      editedAt : moment(now).format("YYYY-MM-DD HH:mm:ss"),
+
+    })
+
+    newTodos[findIndex].task = editingTask;
+    newTodos[findIndex].editedAt = moment(now).format("YYYY-MM-DD HH:mm:ss");
     setTodos(newTodos);
     setEditingId(null);
     seteditingTask("");
@@ -96,7 +105,7 @@ const TodoApp = () => {
           renderItem={(todo, id) => (
             <List.Item
               actions={[
-                editingId === id ? (
+                editingId === todo.id ? (
                   <>
                     <Button type="link" onClick={saveEditing}>
                       Save
@@ -107,7 +116,7 @@ const TodoApp = () => {
                   </>
                 ) : (
                   <>
-                    <Button type="link" onClick={() => startEditing(id)}>
+                    <Button type="link" onClick={() => startEditing(todo.id)}>
                       Edit
                     </Button>
                     <Button type="link" onClick={() => removeTodo(todo.id)}>
@@ -118,7 +127,7 @@ const TodoApp = () => {
               ]}
             >
               <div className="flex flex-col">
-                {editingId === id ? (
+                {editingId === todo.id ? (
                   <Input
                     value={editingTask}
                     onChange={(e) => seteditingTask(e.target.value)}

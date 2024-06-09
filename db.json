@@ -1,66 +1,17 @@
 {
   "todos": [
     {
-      "id": "db10",
-      "task": "fs2",
+      "id": "6814",
+      "task": "Add Navbar aaa",
       "completed": false,
-      "createdAt": "2024-06-08 22:08:18",
-      "editedAt": "2024-06-08 22:08:20"
+      "createdAt": "2024-06-09 13:31:26",
+      "editedAt": "2024-06-09 14:01:31"
     },
     {
-      "id": "83ab",
-      "task": "zxxc",
+      "id": "9dd7",
+      "task": "Learn React js",
       "completed": false,
-      "createdAt": "2024-06-08 22:38:12",
-      "editedAt": null
-    },
-    {
-      "id": "41d7",
-      "task": "zXc",
-      "completed": false,
-      "createdAt": "2024-06-08 22:38:16",
-      "editedAt": null
-    },
-    {
-      "id": "435d",
-      "task": "zxzxvc",
-      "completed": false,
-      "createdAt": "2024-06-08 22:49:19",
-      "editedAt": null
-    },
-    {
-      "id": "f5f7",
-      "task": "zxccx",
-      "completed": false,
-      "createdAt": "2024-06-08 23:06:57",
-      "editedAt": null
-    },
-    {
-      "id": "f755",
-      "task": "zxczx",
-      "completed": false,
-      "createdAt": "2024-06-08 23:06:59",
-      "editedAt": null
-    },
-    {
-      "id": "8511",
-      "task": "zxczx",
-      "completed": false,
-      "createdAt": "2024-06-08 23:07:02",
-      "editedAt": null
-    },
-    {
-      "id": "2287",
-      "task": "zx",
-      "completed": false,
-      "createdAt": "2024-06-08 23:07:47",
-      "editedAt": null
-    },
-    {
-      "id": "61a8",
-      "task": "zxzcx",
-      "completed": false,
-      "createdAt": "2024-06-08 23:07:49",
+      "createdAt": "2024-06-09 13:31:33",
       "editedAt": null
     }
   ]
