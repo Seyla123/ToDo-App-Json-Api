@@ -1,26 +1,24 @@
-import { createContext,useState,useEffect } from "react";
+import { createContext,useState,useCallback } from "react";
 import {  message } from "antd";
 import moment from "moment";
 import axios from "axios";
 const TodosContext = createContext();
 
 function Provider({ children }) {
-  const [todoAll,setTodoAll] = useState([]);
   const [todos, setTodos] = useState([]);
-  const fetchTodo = async () => {
+  const fetchTodo = useCallback(async () => {
       try {
         const response = await fetch('http://localhost:3001/todos');
         if (!response.ok) {
           throw new Error('Failed to fetch todos');
         }
         const data = await response.json();
-        setTodoAll(data);
-        setTodos(data.filter(item=>item.isDeleted==false));
+        setTodos(data);
 
       } catch (error) {
         console.log("Erorr : ",error.message)
       } 
-    };
+    },[])
 
   const createTask= async (addNewTask) => {
     try {
@@ -33,18 +31,8 @@ function Provider({ children }) {
       editedAt: null,
       isDeleted : false,
     });
-    setTodos([
-      ...todos,
-      {
-        task: addNewTask,
-        completed: false,
-        createdAt: moment(now).format("YYYY-MM-DD HH:mm:ss"),
-        editedAt: null,
-        isDeleted : false,
-      },
-    ]);
+    await fetchTodo();
     message.success("Task added!");
-      
     } catch (error) {
       console.log("create task got erorr at ", error);
     }
@@ -56,30 +44,19 @@ function Provider({ children }) {
       const find = newTodos.findIndex(todo => todo.id===id)
       newTodos[find].completed = !newTodos[find].completed;
       const completedTime = newTodos[find].completed ?  moment(now).format("YYYY-MM-DD HH:mm:ss") :  null;
-      await axios.put(`http://localhost:3001/todos/${id}`,{
+      const updateCheck = {
         ...newTodos[find],
         completed: newTodos[find].completed,
         completedAt:completedTime,
+        }
+      await axios.put(`http://localhost:3001/todos/${id}`,updateCheck)
+      newTodos[find].completed ? message.success("Task completed!") : message.warning("Task not completed yet!");
+      await fetchTodo();
 
-    })
-    newTodos[find].completed
-      ? message.success("Task completed!")
-      : message.warning("Task not completed yet!");
-    setTodos(newTodos);
     } catch (error) {
       console.log("Check box got Erorr : ", error);
     }
   };
-//   const removeTodo = async (id) => {
-//     try {
-//       await axios.delete(`http://localhost:3001/todos/${id}`);
-//       const newTodos = todos.filter((todo) => todo.id !== id);
-//       setTodos(newTodos);
-//       message.error("Task removed");
-//     } catch (error) {
-//       console.log("Can't Remove Task Erorr : ", error);
-//     }
-//   };
   const removeTodo = async (id) => {
     try {
         const find = todos.find((todo) => todo.id == id);
@@ -87,8 +64,7 @@ function Provider({ children }) {
             ...find,
             isDeleted: true,
         });
-        const newTodos = todos.filter((todo) => todo.id !== id);
-        setTodos(newTodos);
+        await fetchTodo();
         message.error("Task removed");
     } catch (error) {
       console.log("Can't Remove Task Erorr : ", error.message);
@@ -104,9 +80,7 @@ function Provider({ children }) {
       task : newTask,
       editedAt : moment(now).format("YYYY-MM-DD HH:mm:ss"),
     })
-    newTodos[findIndex].task = newTask;
-    newTodos[findIndex].editedAt = moment(now).format("YYYY-MM-DD HH:mm:ss");
-    setTodos(newTodos);
+    await fetchTodo();
     message.success("Task updated!");
 
     } catch (error) {
@@ -115,7 +89,6 @@ function Provider({ children }) {
   }
   const valueToShare = {
     todos,
-    todoAll,
     fetchTodo,
     createTask,
     updateTask,

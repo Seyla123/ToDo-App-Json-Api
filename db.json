@@ -1,68 +1,13 @@
 {
   "todos": [
     {
-      "id": "3f62",
-      "task": "ssds",
-      "completed": false,
-      "createdAt": "2024-06-09 17:13:36",
+      "id": "4b00",
+      "task": "learning react js",
+      "completed": true,
+      "createdAt": "2024-06-09 19:23:25",
       "editedAt": null,
-      "isDeleted": false
-    },
-    {
-      "id": "4ed9",
-      "task": "ssds",
-      "completed": false,
-      "createdAt": "2024-06-09 17:13:36",
-      "editedAt": null,
-      "isDeleted": true
-    },
-    {
-      "id": "e433",
-      "task": "ssds",
-      "completed": false,
-      "createdAt": "2024-06-09 17:13:36",
-      "editedAt": null,
-      "isDeleted": true
-    },
-    {
-      "id": "258d",
-      "task": "csac",
-      "completed": false,
-      "createdAt": "2024-06-09 17:14:27",
-      "editedAt": null,
-      "isDeleted": true
-    },
-    {
-      "id": "a6ee",
-      "task": "scs",
-      "completed": false,
-      "createdAt": "2024-06-09 17:14:29",
-      "editedAt": null,
-      "isDeleted": true
-    },
-    {
-      "id": "87b6",
-      "task": "add navbar",
-      "completed": false,
-      "createdAt": "2024-06-09 17:40:26",
-      "editedAt": null,
-      "isDeleted": true
-    },
-    {
-      "id": "fe26",
-      "task": "aaa",
-      "completed": false,
-      "createdAt": "2024-06-09 17:45:57",
-      "editedAt": null,
-      "isDeleted": false
-    },
-    {
-      "id": "28b2",
-      "task": "sdd",
-      "completed": false,
-      "createdAt": "2024-06-09 17:46:55",
-      "editedAt": null,
-      "isDeleted": false
+      "isDeleted": false,
+      "completedAt": "2024-06-09 19:23:28"
     }
   ]
 }

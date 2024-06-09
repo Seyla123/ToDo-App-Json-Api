@@ -7,12 +7,11 @@ const TodoApp = () => {
   useEffect(() => {
     fetchTodo();
     
-  }, []);
+  }, [fetchTodo]);
   const [newTodo, setNewTodo] = useState("");
   const [editingId, setEditingId] = useState(null);
   const [editingTask, seteditingTask] = useState("");
-
-
+  const filter = todos.filter(todo => todo.isDeleted == false)
   const addTodo = async () => {
     if (!newTodo) {
       message.error("Please enter a Task");
@@ -34,7 +33,6 @@ const TodoApp = () => {
     setEditingId(null);
     seteditingTask("");
   };
-
   return (
     <div className=" w-full h-screen">
       <div className="max-w-3xl mx-auto mt-10 p-5 bg-white rounded shadow">
@@ -53,7 +51,7 @@ const TodoApp = () => {
         </div>
         <List
           bordered
-          dataSource={todos}
+          dataSource={filter}
           renderItem={(todo) => (
             <List.Item
               actions={[
