@@ -43,10 +43,20 @@ const TodoApp = () => {
     message.success("Task added!");
   };
 
-  const toggleTodo = (id) => {
+  const toggleTodo = async (id) => {
+    const now = new Date();
     const newTodos = [...todos];
-    newTodos[id].completed = !newTodos[id].completed;
-    newTodos[id].completed
+    const find = newTodos.findIndex(todo => todo.id===id)
+    newTodos[find].completed = !newTodos[find].completed;
+    const completedTime = newTodos[find].completed ?  moment(now).format("YYYY-MM-DD HH:mm:ss") :  null;
+    console.log(completedTime);
+    await axios.put(`http://localhost:3001/todos/${id}`,{
+      ...newTodos[find],
+      completed: newTodos[find].completed,
+      completedAt:completedTime,
+
+    })
+    newTodos[find].completed
       ? message.success("Task completed!")
       : message.warning("Task not completed yet!");
     setTodos(newTodos);
@@ -137,7 +147,7 @@ const TodoApp = () => {
                 ) : (
                   <Checkbox
                     checked={todo.completed}
-                    onChange={() => toggleTodo(id)}
+                    onChange={() => toggleTodo(todo.id)}
                   >
                     <span className={todo.completed ? "line-through" : ""}>
                       {todo.task}

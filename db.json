@@ -4,15 +4,17 @@
       "id": "6814",
       "task": "Add Navbar aaa",
       "completed": false,
+      "completedAt": null,
       "createdAt": "2024-06-09 13:31:26",
-      "editedAt": "2024-06-09 14:01:31"
+      "editedAt": "2024-06-09 14:12:21"
     },
     {
       "id": "9dd7",
       "task": "Learn React js",
-      "completed": false,
+      "completed": true,
       "createdAt": "2024-06-09 13:31:33",
-      "editedAt": null
+      "editedAt": null,
+      "completedAt": "2024-06-09 14:07:46"
     }
   ]
 }
