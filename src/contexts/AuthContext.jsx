@@ -1,17 +1,18 @@
-import React, { createContext, useState, useEffect, useContext } from 'react';
+import React, { createContext, useState, useEffect, } from 'react';
 
 const AuthContext = createContext();
 
-export const AuthProvider = ({ children }) => {
+ const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   useEffect(() => {
     const loggedUser = localStorage.getItem('user');
-    console.log("log",typeof loggedUser);
-    setUser(loggedUser);
-    console.log("true",loggedUser,user);
- 
+    console.log("logged user : ", loggedUser);
+    if (loggedUser) {
+      setUser(loggedUser);
+    }
+    console.log(" check auth of user : " ,user);
   }, []);
-  console.log("User : ",user);
+
   const login = (user) => {
     localStorage.setItem('user', JSON.stringify(user));
     setUser(user);
@@ -23,17 +24,20 @@ export const AuthProvider = ({ children }) => {
   };
 
   const signup = (user) => {
-    localStorage.setItem('user', JSON.stringify(user));
+    localStorage.setItem('user', user);
     setUser(user);
   };
-
+  const valueToShare = {
+    user,
+    login,
+    logout,
+    signup,
+  };
   return (
-    <AuthContext.Provider value={{ user, login, logout, signup }}>
+    <AuthContext.Provider value={valueToShare}>
       {children}
     </AuthContext.Provider>
   );
 };
-
-export const useAuth = () => {
-  return useContext(AuthContext);
-};
+export {AuthProvider}
+export default AuthContext

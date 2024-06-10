@@ -1,6 +1,6 @@
 import React from 'react';
 import { Avatar, Button } from 'antd';
-import { useAuth } from '../contexts/AuthContext';
+import useAuth from '../hooks/use-auth-context';
 const UserProfile = ({ user }) => {
   const { logout } = useAuth();
   return (

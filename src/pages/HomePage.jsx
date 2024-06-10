@@ -1,6 +1,5 @@
 import React from 'react';
-import { Button, message } from 'antd';
-import TodoApp from './TodoApp';
+import { Button } from 'antd';
 import { Link } from 'react-router-dom';
 
 
